@@ -31,8 +31,7 @@ def ItemSimilarity(train):
             W[i][j] = cij / math.sqrt(N[i] * N[j])
     return W    
 
-def Recommend(user, train, K, N):
-    W = ItemSimilarity(train)
+def Recommend(user, train, W, K, N):
     rank = dict()
     rank_sorted = dict()
     ru = train[user]
@@ -51,9 +50,12 @@ train_user_ratings, test_user_ratings = loadDataSet()
 # Test offline performance on MovieLens data
 # N：Number of recommended items for each user
 # K: Number of most relevant items 
+# W: Similarity Matrix
+
+W = ItemSimilarity(train_user_ratings)
 N = 10
 for K in [10, 20, 40, 80, 160]:
-    precision, recall, coverage, popularity = Evaluation(Recommend, train_user_ratings, test_user_ratings, K, N)
+    precision, recall, coverage, popularity = Evaluation(Recommend, train_user_ratings, test_user_ratings, W, K, N)
     print("K:", K)
     print(precision, recall, coverage, popularity)
 
